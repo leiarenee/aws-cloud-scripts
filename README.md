@@ -1,2 +1,2 @@
-# aws-cloud-scripts
-Sh and Python scripts for AWS Cloud Services
+# scripts
+Re-usable Bash and Python scripts
