@@ -1,0 +1,43 @@
+---
+regions:
+- "global" # This is for all global resource types e.g. IAM
+- "eu-central-1"
+
+account-blocklist:
+- 708238176420 # master
+- 377449198785 # static
+
+accounts:
+  000000000000:
+    filters:     
+      EC2VPC:
+      - property: IsDefault
+        value: "true"
+      EC2Subnet:
+      - property: DefaultForAz
+        value: "true"
+      EC2InternetGateway:
+      - property: DefaultForAz
+        value: "true" 
+      IAMUser:
+      - "cicd"
+      IAMUserPolicyAttachment:
+      - "cicd -> AdministratorAccess"
+      IAMRole:
+      - "OrganizationAccountAccessRole"
+      IAMLoginProfile:
+      - "cicd"
+      IAMRolePolicyAttachment:
+      - "OrganizationAccountAccessRole -> AdministratorAccess"
+      Route53HostedZone:
+      - property: Name
+        type: "glob"
+        value: "*.leiarenee.io."
+
+
+
+resource-types:
+  # don't nuke IAM users
+  excludes:
+  - IAMUser
+  - IAMUserAccessKey
