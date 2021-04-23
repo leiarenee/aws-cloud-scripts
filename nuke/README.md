@@ -7,15 +7,21 @@ WARNING: This is a highly destructive tool and will clean up all of your resourc
 Inspired from blog [Automated Clean Up with aws-nuke in multiple accounts](https://www.1strategy.com/blog/2019/07/16/automated-clean-up-with-aws-nuke-in-multiple-accounts/) published by [1strategy](https://www.1strategy.com/)
 ## Pre-requisites
 
-* jq - brew install jq
+* jq - `brew install jq`
 * [aws-nuke](https://github.com/rebuy-de/aws-nuke)
 * [aws client](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
 ### Usage
 
+* RUN:
+  * `./nuke.sh` in the current folder
+
+But before:
+
 * Install aws-nuke
-  * Download [aws-nuke-mac-install](https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-darwin-amd64.tar.gz)
+  * Download [aws-nuke-mac-install](https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-darwin-amd64.tar.gz) or choose from [aws-nukevrelease page](https://github.com/rebuy-de/aws-nuke/releases)
   * Copy the binary into this folder and rename it as `aws-nuke`
+* Edit YAML configuration file
   * Duplicate `example.aws-nuke-config-template.yaml` and rename it as `aws-nuke-config-template.yaml`
   * Edit the configuration file and customize it according to your needs.
     * You may want to change all `cicd`s to your specific user name which you use to access to account.
@@ -26,8 +32,7 @@ Inspired from blog [Automated Clean Up with aws-nuke in multiple accounts](https
   * `brew install jq`
 * Install aws client if it is not already installed.
   * [aws-nuke](https://github.com/rebuy-de/aws-nuke)
-* Run:
-  * `./nuke.sh` in the current folder
+
 
 #### Sample AWS Organizational Unit Structure
 

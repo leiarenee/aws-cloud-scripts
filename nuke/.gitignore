@@ -3,3 +3,4 @@ aws-nuke-config.yaml
 arsiv.yml
 aws-nuke
 add-alias.sh
+aws-nuke-config-template.yaml
