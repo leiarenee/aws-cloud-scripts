@@ -11,7 +11,7 @@ mkdir temp
 
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
 aws --profile master organizations list-accounts-for-parent \
-  --parent-id ou-4z13-28regedd \
+  --parent-id $NUKE_PARENT \
   | jq -r '.Accounts |map(.Id) |join("\n")' \
   > temp/accounts.txt
 
@@ -50,7 +50,7 @@ do
 
   # Run aws-nuke
   echo "Running aws-nuke on account $line"
-  x=3
+  x=2
   while [ $x -gt 0 ]
   do
     ./aws-nuke -c temp/$line.yaml --force \
