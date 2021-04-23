@@ -18,6 +18,18 @@ Inspired from blog [Automated Clean Up with aws-nuke in multiple accounts](https
 
 But before:
 
+* Edit AWS credentials file
+  * Enter your master account account credentials in `.aws/credentials` file under a section named as`[master]`  
+
+Ex:
+
+```
+[master]
+aws_access_key_id = ALIA2J*****SNEU6SRNH
+aws_secret_access_key = 3zsz*********rDBxJLm*X*e5z
+region = eu-central-1
+```
+
 * Install aws-nuke
   * Download [aws-nuke-mac-install](https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-darwin-amd64.tar.gz) or choose from [aws-nukevrelease page](https://github.com/rebuy-de/aws-nuke/releases)
   * Copy the binary into this folder and rename it as `aws-nuke`
