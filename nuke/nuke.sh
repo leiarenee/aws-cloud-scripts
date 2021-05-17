@@ -12,7 +12,7 @@ mkdir temp
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
 aws --profile master organizations list-accounts-for-parent \
   --parent-id $NUKE_PARENT \
-  | jq -r '.Accounts |map(.Id) |join("\n")' \
+  | jq -r '.Accounts | map(.Id) | join("\n")' \
   > temp/accounts.txt
 
 cat temp/accounts.txt
