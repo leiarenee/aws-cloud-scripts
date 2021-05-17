@@ -10,7 +10,7 @@ rm -R -f temp
 mkdir temp
 
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
-aws --profile master organizations list-accounts-for-parent \
+aws organizations list-accounts-for-parent \
   --parent-id $NUKE_PARENT \
   | jq -r '.Accounts | map(.Id) | join("\n")' \
   > temp/accounts.txt
@@ -22,7 +22,7 @@ do
   echo "Assuming Role for Account $line"
 
   # Assume Role and get credentials
-  aws --profile master sts assume-role \
+  aws sts assume-role \
     --role-arn arn:aws:iam::$line:role/OrganizationAccountAccessRole \
     --role-session-name account-$line \
     --query "Credentials" \
