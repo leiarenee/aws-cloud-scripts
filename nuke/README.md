@@ -120,7 +120,7 @@ Inspired from blog [Automated Clean Up with aws-nuke in multiple accounts](https
 
 __Note:__ 
 
-Since aws-nuke fails to remove RDS option groups, the following commandline is used to manually remove all RDS option groups.
+Since aws-nuke fails to remove RDS option groups, the following commandline is used to manually remove all RDS option groups. https://github.com/rebuy-de/aws-nuke/issues/637
 
 ```
 aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" | xargs -I '{}' aws rds delete-option-group --option-group-name "{}"
