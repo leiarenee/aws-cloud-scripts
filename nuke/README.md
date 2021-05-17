@@ -114,6 +114,14 @@ Notes: Script will run two times by default. Sometimes aws-nuke fails to destroy
   done
 ```
 
-Reference:
+__Reference:__
 
 Inspired from blog [Automated Clean Up with aws-nuke in multiple accounts](https://www.1strategy.com/blog/2019/07/16/automated-clean-up-with-aws-nuke-in-multiple-accounts/) published by [1strategy](https://www.1strategy.com/)
+
+__Note:__ 
+
+Since aws-nuke fails to remove RDS option groups, the following commandline is used to manually remove all RDS option groups.
+
+```
+aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" | xargs -I '{}' aws rds delete-option-group --option-group-name "{}"
+```
