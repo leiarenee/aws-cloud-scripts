@@ -31,13 +31,13 @@ do
   # cat temp/$line.json
 
   # Extract session credentials and write it to environment variables
-  ACCESS_KEY_ID=$(cat temp/$line.json | jq -r .AccessKeyId)
-  SECRET_ACCESS_KEY=$(cat temp/$line.json | jq -r .SecretAccessKey)
-  SESSION_TOKEN=$(cat temp/$line.json | jq -r .SessionToken)
+  export AWS_ACCESS_KEY_ID=$(cat temp/$line.json | jq -r .AccessKeyId)
+  export AWS_SECRET_ACCESS_KEY=$(cat temp/$line.json | jq -r .SecretAccessKey)
+  export AWS_SESSION_TOKEN=$(cat temp/$line.json | jq -r .SessionToken)
 
-  echo "ACCESS_KEY_ID: $ACCESS_KEY_ID"
-  echo "SECRET_ACCESS_KEY: $SECRET_ACCESS_KEY"
-  echo "SESSION_TOKEN: $SESSION_TOKEN"
+  echo "ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+  echo "SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+  echo "SESSION_TOKEN: $AWS_SESSION_TOKEN"
 
   # Dublicate aws-nuke-config.yaml
   cp aws-nuke-config-template.yaml temp/$line.yaml
@@ -50,17 +50,43 @@ do
 
   # Run aws-nuke
   echo "Running aws-nuke on account $line"
-  x=2
+  x=2 # Number of repeatition
+
+
   while [ $x -gt 0 ]
   do
+    
+    echo "---------------"
+    echo "$x STEP LEFT"
+    echo
+
+    # Run aws-nuke
     ./aws-nuke -c temp/$line.yaml --force \
-    --access-key-id $ACCESS_KEY_ID --secret-access-key $SECRET_ACCESS_KEY --session-token $SESSION_TOKEN \
+    --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
     --no-dry-run \
     | tee -a temp/aws-nuke.log
 
+    # Increase count 
     x=$(($x-1))
+
+    # ---
+    # Manually clean up RDS option groups
+    # https://github.com/rebuy-de/aws-nuke/issues/637
+    echo
+    echo "Removing Option Groups"
+    # List Option Groups
+    aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default"
+    echo
+    # Remove Option Groups
+    aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" | xargs -I '{}' aws rds delete-option-group --option-group-name "{}"
+    # ----
+
   done
 
 
 
 done < temp/accounts.txt
+
+echo
+echo "Nuke Operation copmpleted"
+echo
