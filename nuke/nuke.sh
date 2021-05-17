@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 # Bash script for cleaning accounts
 # https://www.1strategy.com/blog/2019/07/16/automated-clean-up-with-aws-nuke-in-multiple-accounts/
 
