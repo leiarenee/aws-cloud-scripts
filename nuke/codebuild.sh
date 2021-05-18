@@ -10,7 +10,7 @@ rm -R -f temp
 mkdir temp
 
 # Download template file
-#aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
+aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
 
 # Download aws-nuke
 AWS_NUKE_OS="linux-amd64"
@@ -24,7 +24,7 @@ AWS_NUKE_DOWNLOAD="$AWS_NUKE_REPO/releases/download/$AWS_NUKE_VERSION/$AWS_NUKE_
 echo "Download Link: $AWS_NUKE_DOWNLOAD"
 
 # Start download
-wget $AWS_NUKE_DOWNLOAD
+wget --progress=dot:mega $AWS_NUKE_DOWNLOAD
 
 # Unzip file
 echo "Unzipping $AWS_NUKE_FILE"
