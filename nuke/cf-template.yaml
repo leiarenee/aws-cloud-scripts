@@ -8,7 +8,7 @@ Resources:
       Description: 'Builds a container to run AWS-Nuke for all accounts within the specified OU'
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: 'aws/codebuild/docker:18.09.0'
+        Image: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
         ImagePullCredentialsType: CODEBUILD
         PrivilegedMode: true
         Type: LINUX_CONTAINER

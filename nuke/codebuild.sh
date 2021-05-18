@@ -1,9 +1,10 @@
 #!/bin/bash
-aws --version
-exit 0
+
 set -e
 # Bash script for cleaning accounts
 # https://www.1strategy.com/blog/2019/07/16/automated-clean-up-with-aws-nuke-in-multiple-accounts/
+
+aws --version
 
 # Remove current temporary directory if it already exits
 rm -R -f temp
