@@ -1,0 +1,125 @@
+Resources:
+  NukeScriptProjectRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: NukeScriptProjectRole
+      Path: /service/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b255dddc-e4ff-480e-9d5d-f6631447aee9
+  CloudWatchNukeScriptScheduleRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: CloudWatchNukeScriptScheduleRole
+      Path: /service/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b3f79062-4fd0-458f-b104-b41300ce09a3
+  NukeScriptProject:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Artifacts:
+        Type: NO_ARTIFACTS
+      BadgeEnabled: false
+      Description: Builds a container to run AWS-Nuke for all accounts within the specified OU
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: 'aws/codebuild/standard:5.0'
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: true
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: BUILD_CONTEXT
+            Type: PLAINTEXT
+            Value: nuke
+          - Name: BUILD_FILE
+            Type: PLAINTEXT
+            Value: ./codebuild.sh
+          - Name: NUKE_PARENT
+            Type: PLAINTEXT
+            Value: ou-4z13-28regedd
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: !Sub 'AccountNuker-${AWS::StackName}'
+          Status: ENABLED
+      Name: !Sub 'AccountNuker-${AWS::StackName}'
+      ServiceRole: !GetAtt NukeScriptProjectRole.Arn
+      Source:
+        Location: 'https://github.com/leiarenee/aws-cloud-scripts.git'
+        Type: GITHUB
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 15ad3d62-deb8-4e10-b01e-4255a53ecb18
+  CloudWatchNukeScriptSchedule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Name: !Sub 'NukeScriptCloudWatchSchedule-${AWS::StackName}'
+      Description: >-
+        Scheduled Event for running AWS Nuke on all accounts within the
+        specified OU
+      ScheduleExpression: cron(0 0 ? * * *)
+      State: ENABLED
+      RoleArn: !GetAtt CloudWatchNukeScriptScheduleRole.Arn
+      Targets:
+        - Arn: !GetAtt NukeScriptProject.Arn
+          RoleArn: !GetAtt CloudWatchNukeScriptScheduleRole.Arn
+          Id: NukeScriptId
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 736b5df3-b16c-464f-a479-022e49a12b36
+Metadata:
+  'AWS::CloudFormation::Designer':
+    b3f79062-4fd0-458f-b104-b41300ce09a3:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 130
+        'y': 90
+      z: 1
+      embeds: []
+    b255dddc-e4ff-480e-9d5d-f6631447aee9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 20
+        'y': 90
+      z: 1
+      embeds: []
+    15ad3d62-deb8-4e10-b01e-4255a53ecb18:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 20
+        'y': 190
+      z: 1
+      embeds: []
+    736b5df3-b16c-464f-a479-022e49a12b36:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 130
+        'y': 190
+      z: 1
+      embeds: []
