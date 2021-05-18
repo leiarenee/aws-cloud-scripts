@@ -13,8 +13,8 @@ mkdir temp
 aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
 
 # Download aws-nuke
-wget https://github.com/rebuy-de/aws-nuke/releases/download/v2.10.0/aws-nuke-v2.15.0-linux-amd64
-mv aws-nuke-v2.10.0-linux-amd64 /bin/aws-nuke
+wget --progress=dot:giga -O download.zip https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-linux-amd64.tar.gz
+unzip -q ./download.zip -d /bin
 chmod +x /bin/aws-nuke
 
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
