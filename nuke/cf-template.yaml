@@ -19,6 +19,9 @@ Resources:
           - Name: BUILD_FILE
             Type: PLAINTEXT
             Value: ./nuke.sh
+          - Name: NUKE_PARENT
+            Type: PLAINTEXT
+            Value: ou-4z13-28regedd
       LogsConfig:
         CloudWatchLogs:
           GroupName: !Sub 'AccountNuker-${AWS::StackName}'

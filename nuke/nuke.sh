@@ -10,13 +10,13 @@ rm -R -f temp
 mkdir temp
 
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
-aws --profile masters organizations list-accounts-for-parent \
+aws --profile master organizations list-accounts-for-parent \
   --parent-id $NUKE_PARENT \
-  | jq -r '.Accounts | map(.Id) | join("\n")' \
+  | jq -r '.Accounts | map(.Id)' | jq -r '.[]' \
   > temp/accounts.txt
 
 cat temp/accounts.txt
-
+exit 0
 while read -r line 
 do
   echo "Assuming Role for Account $line"
