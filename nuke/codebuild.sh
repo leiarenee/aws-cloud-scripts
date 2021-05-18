@@ -10,12 +10,34 @@ rm -R -f temp
 mkdir temp
 
 # Download template file
-aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
+#aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
 
 # Download aws-nuke
-wget --progress=dot:giga -O download.zip https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-linux-amd64.tar.gz
-gunzip -q download.zip -d /bin
-chmod +x /bin/aws-nuke
+AWS_NUKE_OS="linux-amd64"
+AWS_NUKE_VERSION="v2.15.0"
+
+# Prepare download link
+AWS_NUKE_RELEASE="aws-nuke-$AWS_NUKE_VERSION-$AWS_NUKE_OS"
+AWS_NUKE_REPO="https://github.com/rebuy-de/aws-nuke"
+AWS_NUKE_FILE="$AWS_NUKE_RELEASE.tar.gz"
+AWS_NUKE_DOWNLOAD="$AWS_NUKE_REPO/releases/download/$AWS_NUKE_VERSION/$AWS_NUKE_FILE"
+echo "Download Link: $AWS_NUKE_DOWNLOAD"
+
+# Start download
+wget $AWS_NUKE_DOWNLOAD
+
+# Unzip file
+echo "Unzipping $AWS_NUKE_FILE"
+tar -xf $AWS_NUKE_FILE
+
+# Remove archive
+rm $AWS_NUKE_FILE
+
+# Move File
+mv $AWS_NUKE_RELEASE aws-nuke
+
+# Make it executable
+chmod +x ./aws-nuke
 
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
 aws organizations list-accounts-for-parent \
