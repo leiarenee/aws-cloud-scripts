@@ -68,7 +68,8 @@ do
   echo "ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
   echo "SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
   echo "SESSION_TOKEN: $AWS_SESSION_TOKEN"
-
+aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default"
+exit 0
   # Dublicate aws-nuke-config.yaml
   cp aws-nuke-config-template.yaml temp/$line.yaml
 
