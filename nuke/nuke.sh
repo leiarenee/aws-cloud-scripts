@@ -10,7 +10,7 @@ rm -R -f temp
 mkdir temp
 
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
-aws --profile master organizations list-accounts-for-parent \
+aws organizations list-accounts-for-parent \
   --parent-id $NUKE_PARENT \
   | jq -r '.Accounts | map(.Id)' | jq -r '.[]' \
   > temp/accounts.txt
