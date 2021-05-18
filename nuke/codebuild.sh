@@ -107,12 +107,18 @@ do
   # Manually clean up RDS option groups
   # https://github.com/rebuy-de/aws-nuke/issues/637
   echo
-  echo "Removing Option Groups"
+  echo "RDS Option Groups"
   # List Option Groups
   option_groups=$(aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" || true)
-  echo "Option Groups are: $option_groups"
+  
   # Remove Option Groups
-  $option_groups && echo $option_groups | xargs -I '{}' aws rds delete-option-group --option-group-name "{}" || true
+  if [[ ! -z ${option_groups} ]]
+  then
+    echo "Removing Option Groups $option_groups"
+    echo $option_groups | xargs -I '{}' aws rds delete-option-group --option-group-name "{}" || true
+  else
+    echo "No RDS Option Groups Detected"
+  fi
 
 
 done < temp/accounts.txt
