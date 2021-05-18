@@ -5,7 +5,8 @@ set -e
 # https://www.1strategy.com/blog/2019/07/16/automated-clean-up-with-aws-nuke-in-multiple-accounts/
 
 aws --version
-
+aws rds describe-option-groups
+exit 0
 # Remove current temporary directory if it already exits
 rm -R -f temp
 
