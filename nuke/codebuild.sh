@@ -86,23 +86,23 @@ do
   x=2 # Number of repeatition
 
 
-  # while [ $x -gt 0 ]
-  # do
+  while [ $x -gt 0 ]
+  do
     
-  #   echo "---------------"
-  #   echo "$x STEP LEFT"
-  #   echo
+    echo "---------------"
+    echo "$x STEP LEFT"
+    echo
 
-  #   # Run aws-nuke
-  #   ./aws-nuke -c temp/$line.yaml --force \
-  #   --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
-  #   --no-dry-run \
-  #   | tee -a temp/aws-nuke.log
+    # Run aws-nuke
+    ./aws-nuke -c temp/$line.yaml --force \
+    --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
+    --no-dry-run \
+    | tee -a temp/aws-nuke.log
 
-  #   # Increase count 
-  #   x=$(($x-1))
+    # Increase count 
+    x=$(($x-1))
 
-  # done
+  done
 
   # Manually clean up RDS option groups
   # https://github.com/rebuy-de/aws-nuke/issues/637
