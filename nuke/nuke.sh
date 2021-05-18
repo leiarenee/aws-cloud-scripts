@@ -16,13 +16,13 @@ aws organizations list-accounts-for-parent \
   > temp/accounts.txt
 
 cat temp/accounts.txt
-exit 0
+
 while read -r line 
 do
   echo "Assuming Role for Account $line"
 
   # Assume Role and get credentials
-  aws --profile master sts assume-role \
+  aws sts assume-role \
     --role-arn arn:aws:iam::$line:role/OrganizationAccountAccessRole \
     --role-session-name account-$line \
     --query "Credentials" \
