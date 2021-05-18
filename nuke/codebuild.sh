@@ -5,8 +5,7 @@ set -e
 # https://www.1strategy.com/blog/2019/07/16/automated-clean-up-with-aws-nuke-in-multiple-accounts/
 
 aws --version
-aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" || true
-exit 0
+
 # Remove current temporary directory if it already exits
 rm -R -f temp
 
@@ -72,8 +71,7 @@ do
   echo "ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
   echo "SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
   echo "SESSION_TOKEN: $AWS_SESSION_TOKEN"
-aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default"
-exit 0
+
   # Dublicate aws-nuke-config.yaml
   cp aws-nuke-config-template.yaml temp/$line.yaml
 
@@ -88,36 +86,33 @@ exit 0
   x=2 # Number of repeatition
 
 
-  while [ $x -gt 0 ]
-  do
+  # while [ $x -gt 0 ]
+  # do
     
-    echo "---------------"
-    echo "$x STEP LEFT"
-    echo
+  #   echo "---------------"
+  #   echo "$x STEP LEFT"
+  #   echo
 
-    # Run aws-nuke
-    ./aws-nuke -c temp/$line.yaml --force \
-    --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
-    --no-dry-run \
-    | tee -a temp/aws-nuke.log
+  #   # Run aws-nuke
+  #   ./aws-nuke -c temp/$line.yaml --force \
+  #   --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
+  #   --no-dry-run \
+  #   | tee -a temp/aws-nuke.log
 
-    # Increase count 
-    x=$(($x-1))
+  #   # Increase count 
+  #   x=$(($x-1))
 
-    # ---
-    # Manually clean up RDS option groups
-    # https://github.com/rebuy-de/aws-nuke/issues/637
-    echo
-    echo "Removing Option Groups"
-    # List Option Groups
-    aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default"
-    echo
-    # Remove Option Groups
-    aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" | xargs -I '{}' aws rds delete-option-group --option-group-name "{}"
-    # ----
+  # done
 
-  done
-
+  # Manually clean up RDS option groups
+  # https://github.com/rebuy-de/aws-nuke/issues/637
+  echo
+  echo "Removing Option Groups"
+  # List Option Groups
+  option_groups=$(aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" || true)
+  echo "Option Groups are: $option_groups"
+  # Remove Option Groups
+  $option_groups && echo $option_groups | xargs -I '{}' aws rds delete-option-group --option-group-name "{}" || true
 
 
 done < temp/accounts.txt
