@@ -9,6 +9,9 @@ rm -R -f temp
 # Create a termporary directory
 mkdir temp
 
+# Download template file
+aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
+  
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
 aws organizations list-accounts-for-parent \
   --parent-id $NUKE_PARENT \
@@ -39,9 +42,6 @@ do
   echo "SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
   echo "SESSION_TOKEN: $AWS_SESSION_TOKEN"
 
-  # Download template file
-  aws s3api get-object --bucket master-config-files --key aws-nuke-config-template.yaml aws-nuke-config-template.yaml
-  
   # Dublicate aws-nuke-config.yaml
   cp aws-nuke-config-template.yaml temp/$line.yaml
 
