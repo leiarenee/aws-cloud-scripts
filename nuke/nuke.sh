@@ -9,11 +9,16 @@ rm -R -f temp
 # Create a termporary directory
 mkdir temp
 
+if [ -z $1 ]
+then
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
 aws --profile master organizations list-accounts-for-parent \
   --parent-id $NUKE_PARENT \
   | jq -r '.Accounts | map(.Id)' | jq -r '.[]' \
   > temp/accounts.txt
+else
+echo $1 > temp/accounts.txt
+fi
 
 cat temp/accounts.txt
 
@@ -50,7 +55,7 @@ do
 
   # Run aws-nuke
   echo "Running aws-nuke on account $line"
-  x=2 # Number of repeatition
+  x=1 # Number of repeatition
 
 
   while [ $x -gt 0 ]
@@ -68,18 +73,6 @@ do
 
     # Increase count 
     x=$(($x-1))
-
-    # ---
-    # Manually clean up RDS option groups
-    # https://github.com/rebuy-de/aws-nuke/issues/637
-    echo
-    echo "Removing Option Groups"
-    # List Option Groups
-    aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default"
-    echo
-    # Remove Option Groups
-    aws rds describe-option-groups | jq -r '.[] | .[].OptionGroupName' | grep -v "default" | xargs -I '{}' aws rds delete-option-group --option-group-name "{}"
-    # ----
 
   done
 

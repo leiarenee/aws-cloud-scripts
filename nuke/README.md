@@ -31,19 +31,18 @@ region = eu-central-1
 ```
 
 * Install aws-nuke
-  * Download [aws-nuke-mac-install](https://github.com/rebuy-de/aws-nuke/releases/download/v2.15.0/aws-nuke-v2.15.0-darwin-amd64.tar.gz) or choose from [aws-nukevrelease page](https://github.com/rebuy-de/aws-nuke/releases)
+  * Download [aws-nuke](https://github.com/rebuy-de/aws-nuke/releases)
   * Copy the binary into this folder and rename it as `aws-nuke`
 * Edit YAML configuration file
   * Duplicate `example.aws-nuke-config-template.yaml` and rename it as `aws-nuke-config-template.yaml`
   * Edit the configuration file and customize it according to your needs.
     * You may want to change all `cicd`s to your specific user name which you use to access to account.
     * And `*.my-domain.com.` in `Route53HostedZone` section.
-* Set Environment variable NUKE_PARENT to parent organizational unit.
-  * Ex. for Fish : `set -gx NUKE_PARENT "ou-2z13-28regecc"`
+* Set Environment variable NUKE_PARENT to parent organizational unit. (edit .envrc if you use direnv)
+  * Ex. export NUKE_PARENT=ou-4z13-28regedd
 * Install jq if it is not already installed.
   * `brew install jq`
 * Install aws client if it is not already installed.
-  * [aws-nuke](https://github.com/rebuy-de/aws-nuke)
 
 
 #### Sample AWS Organizational Unit Structure
