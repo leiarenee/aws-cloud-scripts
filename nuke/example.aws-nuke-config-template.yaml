@@ -18,6 +18,12 @@ accounts:
       EC2InternetGateway:
       - property: DefaultForAz
         value: "true" 
+      EC2RouteTable:
+      - property: DefaultVPC
+        value: "true"
+      EC2DHCPOption:
+      - property: DefaultVPC
+        value: "true"
       IAMUser:
       - "cicd"
       IAMUserPolicyAttachment:
