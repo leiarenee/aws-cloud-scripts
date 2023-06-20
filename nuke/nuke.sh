@@ -8,8 +8,8 @@ rm -R -f temp
 
 # Create a termporary directory
 mkdir temp
-
-if [ -z $1 ]
+[ ! -z $1 ] && NUKE_ACCOUNT=$1
+if [ -z $NUKE_ACCOUNT ]
 then
 # Get account ids which belong the parent organizational unit and write the output to accounts.txt
 aws --profile master organizations list-accounts-for-parent \
@@ -17,13 +17,16 @@ aws --profile master organizations list-accounts-for-parent \
   | jq -r '.Accounts | map(.Id)' | jq -r '.[]' \
   > temp/accounts.txt
 else
-echo $1 > temp/accounts.txt
+echo $NUKE_ACCOUNT > temp/accounts.txt
 fi
 
 cat temp/accounts.txt
 
 while read -r line 
 do
+
+if [ -z $NUKE_ACCOUNT ]
+then
   echo "Assuming Role for Account $line"
 
   # Assume Role and get credentials
@@ -43,7 +46,7 @@ do
   echo "ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
   echo "SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
   echo "SESSION_TOKEN: $AWS_SESSION_TOKEN"
-
+fi
   # Dublicate aws-nuke-config.yaml
   cp aws-nuke-config-template.yaml temp/$line.yaml
 
@@ -66,10 +69,10 @@ do
     echo
 
     # Run aws-nuke
-    ./aws-nuke -c temp/$line.yaml --force \
-    --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
-    --no-dry-run \
-    | tee -a temp/aws-nuke.log
+    aws-nuke -c temp/$line.yaml --force --no-dry-run | tee -a temp/aws-nuke.log
+    # --access-key-id $AWS_ACCESS_KEY_ID --secret-access-key $AWS_SECRET_ACCESS_KEY --session-token $AWS_SESSION_TOKEN \
+    
+    
 
     # Increase count 
     x=$(($x-1))
